@@ -28,3 +28,7 @@
    ```shell
    gpstop -u
    ```
+6. Run the script against the container:
+   ```shell
+   psql -f script.sql -U gpadmin -d postgres -h 0.0.0.0 -p 6000
+   ```
