@@ -13,22 +13,19 @@
      greengagedb6_installed:latest \
      bash -c "ssh-keygen -A && /usr/sbin/sshd && bash"
    ```
-3. Make cluster:
+3. Make the cluster:
    ```shell
    source gpdb_src/concourse/scripts/common.bash && make_cluster
    ```
-4. Update pg_hba.conf:
+4. Update _pg_hba.conf_ and reload the config:
    ```shell
    su - gpadmin -c '
    source /usr/local/greengage-db-devel/greengage_path.sh;
    source gpdb_src/gpAux/gpdemo/gpdemo-env.sh;
-   echo "host    all    all    0.0.0.0/0    trust" >> "$MASTER_DATA_DIRECTORY/pg_hba.conf"'
+   echo "host    all    all    0.0.0.0/0    trust" >> "$MASTER_DATA_DIRECTORY/pg_hba.conf";
+   gpstop -u;'
    ```
-5. Reload config:
-   ```shell
-   gpstop -u
-   ```
-6. Run the script against the container:
+5. Run the script against the container:
    ```shell
    psql -f script.sql -U gpadmin -d postgres -h 0.0.0.0 -p 6000
    ```
