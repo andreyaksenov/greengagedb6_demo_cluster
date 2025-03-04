@@ -1,6 +1,8 @@
 1. Build:
    ```shell
    docker build -t greengagedb6_installed .
+   # or on ARM Mac
+   docker buildx build --platform=linux/amd64 -t greengagedb6_installed .
    ```
 2. Run:
    ```shell
