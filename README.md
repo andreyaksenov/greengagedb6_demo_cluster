@@ -24,6 +24,7 @@
    su - gpadmin -c '
    source /usr/local/greengage-db-devel/greengage_path.sh;
    source gpdb_src/gpAux/gpdemo/gpdemo-env.sh;
+   echo "local   all    all    trust" >> "$MASTER_DATA_DIRECTORY/pg_hba.conf";
    echo "host    all    all    0.0.0.0/0    trust" >> "$MASTER_DATA_DIRECTORY/pg_hba.conf";
    gpstop -ra;'
    ```
