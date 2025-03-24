@@ -51,3 +51,29 @@
    ```shell
    psql -f script.sql -U gpadmin -d postgres -h 0.0.0.0 -p 6000
    ```
+   
+## Alternative: using Docker Compose
+
+1. Build cluster images and start instances:
+   ```shell
+   docker compose up
+   ```
+2. Connect to the master instance:
+   ```shell
+   docker exec -it mdw bash
+   sudo su - gpadmin
+   source .bashrc
+   ```
+3. Initialize a cluster as described here: [Initialize DBMS](https://greengagedb.org/en/docs-gg/current/initialize_dbms.html).
+4. Edit _pg_hba.conf_ to allow local connections for all users:
+   ```
+   echo "local   all    all    trust" >> "$MASTER_DATA_DIRECTORY/pg_hba.conf";
+   ```
+5. Apply a new config:
+   ```shell
+   gpstop -u
+   ```
+6. Run a test script against the container, for example:
+   ```shell
+   psql -f examples/tablespaces/script.sql
+   ```

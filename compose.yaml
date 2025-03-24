@@ -1,0 +1,116 @@
+services:
+  mdw:
+    build:
+      context: .
+      platforms:
+        - linux/amd64
+    image: greengagedb6-mdw
+    container_name: mdw
+    hostname: mdw
+    domainname: example.com
+    environment:
+      - HOSTNAME=mdw
+    command: >
+      bash -c "
+        /usr/sbin/sshd && su - gpadmin -c 'source /usr/local/greengage-db-devel/greengage_path.sh;
+        tail -f /dev/null'
+      "
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./ggdb_cluster/configs/hostfile_all_hosts:/home/gpadmin/hostfile_all_hosts
+      - ./ggdb_cluster/configs/hostfile_segment_hosts:/home/gpadmin/hostfile_segment_hosts
+      - ./ggdb_cluster/configs/init_config:/home/gpadmin/init_config
+      - ./ggdb_cluster/configs/.bashrc:/home/gpadmin/.bashrc
+      - <absolute_path_to_ggdb_repo>/docs-greengagedb/en/modules/ROOT/examples:/home/gpadmin/examples
+      - mdw_data:/data1
+      - mdw_home:/home/gpadmin
+    networks:
+      cluster_network:
+        ipv4_address: 192.168.1.10
+
+  smdw:
+    build:
+      context: .
+      platforms:
+        - linux/amd64
+    image: greengagedb6-smdw
+    container_name: smdw
+    hostname: smdw
+    domainname: example.com
+    environment:
+      - HOSTNAME=smdw
+    command: >
+      bash -c "
+        /usr/sbin/sshd && su - gpadmin -c 'source /usr/local/greengage-db-devel/greengage_path.sh;
+        tail -f /dev/null'
+      "
+    volumes:
+      - smdw_data:/data1
+      - smdw_home:/home/gpadmin
+    networks:
+      cluster_network:
+        ipv4_address: 192.168.1.20
+
+  sdw1:
+    build:
+      context: .
+      platforms:
+        - linux/amd64
+    image: greengagedb6-sdw1
+    container_name: sdw1
+    hostname: sdw1
+    domainname: example.com
+    environment:
+      - HOSTNAME=sdw1
+    command: >
+      bash -c "
+        /usr/sbin/sshd && su - gpadmin -c 'source /usr/local/greengage-db-devel/greengage_path.sh;
+        tail -f /dev/null'
+      "
+    volumes:
+      - sdw1_data:/data1
+      - sdw1_home:/home/gpadmin
+    networks:
+      cluster_network:
+        ipv4_address: 192.168.1.30
+
+  sdw2:
+    build:
+      context: .
+      platforms:
+        - linux/amd64
+    image: greengagedb6-sdw2
+    container_name: sdw2
+    hostname: sdw2
+    domainname: example.com
+    environment:
+      - HOSTNAME=sdw2
+    command: >
+      bash -c "
+        /usr/sbin/sshd && su - gpadmin -c 'source /usr/local/greengage-db-devel/greengage_path.sh;
+        tail -f /dev/null'
+      "
+    volumes:
+      - sdw2_data:/data1
+      - sdw2_home:/home/gpadmin
+    networks:
+      cluster_network:
+        ipv4_address: 192.168.1.40
+
+volumes:
+  mdw_data:
+  mdw_home:
+  smdw_data:
+  smdw_home:
+  sdw1_data:
+  sdw1_home:
+  sdw2_data:
+  sdw2_home:
+
+networks:
+  cluster_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24
